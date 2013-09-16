@@ -6,9 +6,6 @@ Instructors:
 * Catherine Wilson <chw39@cam.ac.uk>
 * David Phillip Judge <dpj10@cam.ac.uk>
 
-
-Script used for the NGS ChIP-seq practical for part II student at Cambridge University, UK.
-
 # Aim
 
 The purpose of this practical course is to achieve an overview of Next Generation Sequencing (NGS) data processing and interpretation. In this introduction we will work our way through Chromatin Immuno-precipitation raw sequence (ChIP-seq) up to analysing resulting gene lists.
