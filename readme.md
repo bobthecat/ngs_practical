@@ -1,4 +1,4 @@
-Next Generation Sequencing Pratical course
+Next Generation Sequencing Pratical
 =====================
 
 Instructors:
@@ -13,7 +13,7 @@ Script used for the NGS ChIP-seq practical for part II student at Cambridge Univ
 
 The purpose of this practical course is to achieve an overview of Next Generation Sequencing (NGS) data processing and interpretation. In this introduction we will work our way through Chromatin Immuno-precipitation raw sequence (ChIP-seq) up to analysing resulting gene lists.
 
-**1. Introduction to ChIP-seq**
+## Introduction to ChIP-seq
 
 Chromatin immunoprecipitation (ChIP) allows investigating interactions between a protein and the DNA of a cell. Immunoprecipitation use antibodies to recognized specific proteins that bind to DNA. After several steps the DNA bound by the protein is recovered and sequenced (ChIP-seq). The sequenced are then analysed using bioinformatics techniques that we will review today (See [wikipedia figure for ChIP-seq](https://en.wikipedia.org/wiki/ChIP-sequencing)). Also see Kidder, B. L. et al., ChIP-Seq: technical considerations for obtaining high-quality data. Nature immunology (2011).
 
@@ -38,9 +38,9 @@ There are three types of control commonly used.
 * Input chromatin (sheared DNA)
 * Knockdown of the factor (KO or siRNA)
 
-2) Tutorial start
+## Practical
 
-1.	Aligning raw sequences to reference genome
+**1)	Aligning raw sequences to reference genome**
 Open the terminal application and navigate to the NGS_pratical folder by typing the following:
 
 `cd NGS_pratical`
@@ -67,7 +67,7 @@ When this is finished, we take a look at the aligner report:
 `cat sample/report_bowtie_GSM288346_Oct4_short.txt`
 `cat control/ report_bowtie_GSM288358_GFP_short.txt`
 
-2.	Calling peaks
+**2)	Calling peaks**
 
 We are now ready to call the peaks. To call peaks we use a program call MACS2. You have to use both the sample BED file and the control BED file. The MACS2 algorithm will determined if a peak is a true positive in your sample using the control sample. You have to set a p-value in advance. The following command generate the peaks however, this will not work on the sample dataset given
 
@@ -76,7 +76,7 @@ We are now ready to call the peaks. To call peaks we use a program call MACS2. Y
 We generated in advance the peak file on the full version of the experiments.
 You can find the different files in the results folder.
 
-3.	Quality check
+**3)	Quality check**
 
 We will assess the quality control report for the sample and the control.
 
@@ -85,14 +85,14 @@ Go into the NGS_practical folder using your file system. Localize in the control
 http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/
 
 
-4.	Visualization on UCSC
+**4)	Visualization on UCSC**
 
 We will now visualize the sample and control profile as well as the peaks that have been called on the UCSC Genome Browser.
 
 http://genome-euro.ucsc.edu/cgi-bin/hgTracks?db=mm10&hgct_customText=http://lila.results.cscr.cam.ac.uk/david/ngs_practical/tracks
 
 
-5.	Extracting peak associated genes using R.
+**5)	Extracting peak associated genes using R.**
 
 For this purpose we use a R package called ChIPpeakAnno. This will extract the gene associated to the peak found by MACS2. A peak is associated to a gene by looking at his position compared to the transcription Start Site (TSS) of the neighbouring genes. A peak can be associated to more than one gene.
 The instruction how to use the R package are describe in the help of the package and the commands ran to generate the gene list of today are on the gitHub repository.
