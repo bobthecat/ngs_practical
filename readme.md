@@ -41,37 +41,40 @@ There are three types of control commonly used.
 ## Practical
 
 **1)	Aligning raw sequences to reference genome**
+
 Open the terminal application and navigate to the NGS_pratical folder by typing the following:
 
-`cd NGS_pratical`
+<code>cd NGS_pratical</code>
 
 Now list the file in the directory by typing:
 
-`ls`
+<code>ls</code>
 
 You will find two folder (Oct4 and control) containing each one file call GSM288346_Oct4_short.fq and GSM288358_GFP_short.fq, respectively. Both of them contain 30,000 lines of raw sequences in fastQ format. The fastQ format encodes at the same time the sequence and their quality. If you would like to have a look at the beginning of the file type the following:
 
-`head GSM288346_Oct4_short.fq`
+<code>head GSM288346_Oct4_short.fq</code>
 
 We will align both files to the latest mouse reference genome release GRC83/mm10 using a in-house script. Type the following on your terminal:
 
-`ngs_align –f sample –x mm10
-sam2bigWig –f sample –x mm10
-
-ngs_align –f control –x mm10
-sam2bigWig –f control –x mm10
-`
+<code>
+	ngs_align –f sample –x mm10
+	sam2bigWig –f sample –x mm10
+	ngs_align –f control –x mm10
+	sam2bigWig –f control –x mm10
+</code>
 
 When this is finished, we take a look at the aligner report:
 
-`cat sample/report_bowtie_GSM288346_Oct4_short.txt`
-`cat control/ report_bowtie_GSM288358_GFP_short.txt`
+<code>
+cat sample/report_bowtie_GSM288346_Oct4_short.txt
+cat control/ report_bowtie_GSM288358_GFP_short.txt
+</code>
 
 **2)	Calling peaks**
 
 We are now ready to call the peaks. To call peaks we use a program call MACS2. You have to use both the sample BED file and the control BED file. The MACS2 algorithm will determined if a peak is a true positive in your sample using the control sample. You have to set a p-value in advance. The following command generate the peaks however, this will not work on the sample dataset given
 
-`macs2 callpeak -t sample/GSM288346_Oct4_short.BED -c control/GSM288358_GFP_short.BED -g mm -n results_p1e-9 -f BED -p 1e-9 --nomodel --shiftsize=100`
+<code>macs2 callpeak -t sample/GSM288346_Oct4_short.BED -c control/GSM288358_GFP_short.BED -g mm -n results_p1e-9 -f BED -p 1e-9 --nomodel --shiftsize=100</code>
 
 We generated in advance the peak file on the full version of the experiments.
 You can find the different files in the results folder.
