@@ -1,0 +1,163 @@
+#!/bin/bash
+######################################
+# 2013-09-16
+# David Ruau, Department of Haematology
+# CIMR, University of Cambridge
+# Licence: GPL (>=2)
+######################################
+
+## PATH to folder with UCSC chromosome size files
+## files obtain using fetchChromSizes from UCSC
+UCSC_resource="/home/Programs/bioinformatics_resources/UCSC/"
+
+usage(){
+	echo 
+    echo -e '\033[1mUtility to process aligned read following ngs_align step\033[0m'
+	echo 
+	echo -e '\033[1mNAME\033[0m'
+	echo '     sam2bigWig'
+	echo 
+	echo -e '\033[1mSYNOPSIS\033[0m'
+	echo '     usage: sam2bigWig [-f folder] [-x ref_genome]'
+	echo 
+    echo -e '\033[1mDESCRIPTION\033[0m'
+	echo '     This utility will process the sam files up to bigWig files'
+	echo '     sam2bigWig is meant to be run just after ngs_align.'
+	echo 
+	echo '     The options are as follows:'
+	echo 
+    echo -e '     \033[1m-h'
+	echo -e '     --help\033[0m'
+    echo '             Show this message'
+    echo -e '     \033[1m-f \033[4mcommand\033[0m'
+	echo '             The folder containing the sam file'
+	echo 
+	echo -e '     \033[1m-x \033[4mcommand\033[0m'
+	echo '             [optional] Reference genome. Either: mm10, mm9, hg19, rn4 or rn5. If empty program will quit after fastQC'
+	echo 
+	echo '     Example: sam2bigWig -f sample -x mm10'
+	echo 
+	echo  -e '\033[1mAUTHOR\033[0m'
+	echo '     David Ruau <davidruau@gmail.com>'
+	echo '     Department of Haematology, Gottgens lab'
+	echo '     CIMR, University of Cambridge'
+	echo '     Licence: GPL (>=2)'
+	echo
+	echo '16 Sept, 2013'
+	exit 1
+}
+
+checkFile(){
+	fileToCheck=$1
+	commandArg=$2
+	if [[ -s $fileToCheck ]]; then
+		echo
+		echo -e "\033[1m\e[00;31m***\e[00m "$fileToCheck" DONE \e[00;31m***\e[00m\033[0m"
+	else
+		echo
+		echo -e "\033[1m\e[00;31m***\e[00m "$fileToCheck" MISSING. Check "$commandArg" step \e[00;31m***\e[00m\033[0m"
+		exit 1
+	fi
+}
+
+FOLDER=
+GENOME=
+
+# Note that the : after an option flag means that it should have a value instead of
+# just being the boolean flag that a is.
+# OPTS=`getopt -o hg:m:s:x: --long help,trimmed -- "$@"`
+OPTS=`getopt -o hf:x: --long help -- "$@"`
+if [ $? != 0 ]
+then
+	# something went wrong, getopt will put out an error message for us
+    exit 1
+fi
+
+eval set -- "$OPTS"
+
+while true
+do
+	case "$1" in
+        -h | --help)
+            usage
+			;;
+		# for options with required arguments, an additional shift is required
+        -f)
+            FOLDER=$2
+			shift 2;;
+		-x)
+			GENOME=$2
+			shift 2;;
+		--) break;;
+		--*) break;;
+        -?)
+            usage
+            ;;
+    esac
+done
+
+###########
+# BEGIN
+###########
+
+if [[ -z $FOLDER ]] || [[ -z $GENOME ]]; then
+	usage
+fi
+
+## GLOBAL VARIABLE
+resource=$UCSC_resource$GENOME.chrom.sizes
+
+if [[ ! -d $FOLDER ]]; then
+	echo
+	echo -e "\033[1m\e[00;31m***\e[00m The $FOLDER folder cannot be found in the working directory \e[00;31m***\e[00m\033[0m"
+	echo "Verify that you are at the correct place in the file architecture."
+	echo
+	exit 1
+fi
+
+cd $FOLDER
+
+FILE=($(ls *.sam | perl -pe 's/(.*.sam)/\1/g'))
+FILEROOT=($(ls *.sam | perl -pe 's/(.*).sam/\1/g'))
+
+echo 
+echo "==> Converting sam to bed..."
+
+sam2bed < $FILE > $FILEROOT.BED
+# output is sorted
+
+checkFile $FILEROOT.BED "sam2bed"
+
+echo 
+echo "==> Extenting reads to 200bp and correct extended coordinates..."
+
+make_bed_pipeline.pl $FILEROOT.BED $FILEROOT.temp.BED
+
+checkFile $FILEROOT.temp.BED "make_bed_pipeline.pl"
+
+mv $FILEROOT.temp.BED $FILEROOT.BED
+
+echo 
+echo "==> Creating bedgraph..."
+
+genomeCoverageBed -g $resource -i $FILEROOT.BED -bg > $FILEROOT.bedgraph
+
+checkFile $FILEROOT.bedgraph "genomeCoverageBed"
+
+echo 
+echo "==> Creating bigWig..."
+
+bedGraphToBigWig $FILEROOT.bedgraph $resource $FILEROOT.bw
+
+checkFile $FILEROOT.bw "bedGraphToBigWig"
+
+# cleaning up
+rm $FILEROOT.bedgraph
+
+echo '==> Summary:'
+echo 
+cd ..
+tree -shFL 1 $FOLDER
+
+echo 
+echo -e "\033[1m\e[00;31m done.\e[00m\033[0m"
