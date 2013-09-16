@@ -58,8 +58,11 @@ We will align both files to the latest mouse reference genome release GRC83/mm10
 
 <code>
 	ngs_align –f sample –x mm10
+	
 	sam2bigWig –f sample –x mm10
+	
 	ngs_align –f control –x mm10
+	
 	sam2bigWig –f control –x mm10
 </code>
 
@@ -67,6 +70,7 @@ When this is finished, we take a look at the aligner report:
 
 <code>
 cat sample/report_bowtie_GSM288346_Oct4_short.txt
+
 cat control/ report_bowtie_GSM288358_GFP_short.txt
 </code>
 
