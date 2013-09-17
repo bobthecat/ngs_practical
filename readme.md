@@ -37,17 +37,19 @@ There are three types of control commonly used.
 
 ## Practical
 
-**1)	Aligning raw sequences to reference genome**
+### 1)	Aligning raw sequences to reference genome
 
-Open the terminal application and navigate to the NGS_pratical folder by typing the following:
+**Open the terminal application and navigate to the NGS_pratical folder by typing the following:**
 
 	cd NGS_pratical
 
-Now list the files in the directory by typing:
+**Now list the files in the directory by typing:**
 
 	ls
 
-You will find two folder (sample and control) containing each one file call GSM288346_Oct4_short.fq and GSM288358_GFP_short.fq, respectively. Both of them contain 30,000 lines of raw sequences in fastQ format. The fastQ format encodes at the same time the sequence and their quality. If you would like to have a look at the beginning of the file type the following:
+You will find two folder (sample and control) containing each one file call GSM288346_Oct4_short.fq and GSM288358_GFP_short.fq, respectively. Both of them contain 30,000 lines of raw sequences in fastQ format. The fastQ format encodes at the same time the sequence and their quality.
+
+**If you would like to have a look at the beginning of the file type the following:**
 
 	head GSM288346_Oct4_short.fq
 
@@ -60,7 +62,7 @@ We will now align both files to the latest mouse reference genome release GRC83/
 3. Align to mm10 using Bowtie2
 4. Remove sequences that did not align uniquely
 
-Type the following on your terminal:
+**Type the following on your terminal:**
 
 	ngs_align –f sample –x mm10
 	sam2bigWig –f sample –x mm10
@@ -68,12 +70,12 @@ Type the following on your terminal:
 	ngs_align –f control –x mm10
 	sam2bigWig –f control –x mm10
 
-When this is finished take a look at the alignment reports:
+**When this is finished take a look at the alignment reports:**
 
 	cat sample/report_bowtie_GSM288346_Oct4_short.txt
 	cat control/ report_bowtie_GSM288358_GFP_short.txt
 
-**3)	Quality check**
+### 2)	Quality check
 
 We will assess the quality control report for the sample and the control.
 
@@ -83,17 +85,17 @@ The complete documentation for the fastQC report can be found here:
 
 http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/
 
-**2)	Calling peaks**
+### 3)	Calling peaks
 
 We are now ready to call the peaks. This mean determining of a binding event is real or just noise. To determe true signal from noise we use a program call MACS2. The algorithm will determined if a peak is a true positive in your sample using the control sample. You have to set a level of stringency (a p-value) to run the program. The following command generate the peaks.
 
 	macs2 callpeak -t sample/GSM288346_Oct4_short.BED -c control/GSM288358_GFP_short.BED -g mm -n results_p1e-9 -f BED -p 1e-9 --nomodel --shiftsize=100
 
-Of note, this will not work on the small dataset given in this practical. Hence, we generated in advance the peak file on the full version of the experiments. You can find the different files in the *results* folder.
+Of note, this will not work on the small dataset given in this practical. Hence, we generated in advance the peak file on the full version of the experiments. You can find the different files in the **results** folder.
 
-**4)	Visualization on UCSC**
+### 4)	Visualization on UCSC
 
-We will now visualize the sample and control profile as well as the peaks that have been called on the UCSC Genome Browser (click on the following link).
+We will now visualize the sample and control profile as well as the peaks that have been called on the UCSC Genome Browser (**click on the following link**).
 
 http://genome-euro.ucsc.edu/cgi-bin/hgTracks?db=mm10&hgct_customText=http://lila.results.cscr.cam.ac.uk/david/ngs_practical/tracks
 
@@ -102,9 +104,9 @@ What we are visualizing are the profiles of both the Oct4 sample and the control
 **[Q] Which level of stringency is the most accurate?**
 
 
-**5)	Extracting peak associated genes using R.**
+### 5)	Extracting peak associated genes using R
 
-We will now attempt to extract the genes associated to the peaks found by MACS2. For this purpose we use a R package called `ChIPpeakAnno`. A peak is associated to a gene by looking at his position compared to the Transcription Start Site (TSS) of the neighbouring genes. A peak can be associated to more than one gene.
+We will now attempt to extract the genes associated to the peaks found by MACS2. For this purpose we use a R package called `[ChIPpeakAnno](http://www.bioconductor.org/packages/2.12/bioc/html/ChIPpeakAnno.html "Bioconductor - ChIPpeakAnno")`. A peak is associated to a gene by looking at his position compared to the Transcription Start Site (TSS) of the neighbouring genes. A peak can be associated to more than one gene.
 
 The instruction how to use the R package are describe in the help of the `ChIPpeakAnno` package and the commands ran to generate the gene list of today are in the `bed2gene.r` and `library.r` files in the gitHub repository. Briefly, there are several steps from peak to gene association to gene annotation with correct IDs and symbols.
 
@@ -116,13 +118,13 @@ To extract the list of geneID
 
 	cat annotatedPeakList.csv | cut -d, -f16 | perl -pe 's/"(\d+)"/\1/g' | perl -pe 's/^\n//g' | tail -n +2 | sort | uniq > gene_id.txt
 	
-**6)	Meta-analysis of the gene list**
+### 6)	Meta-analysis of the gene list
 
 We are now at the interpretation level. The bioinformatic ground work is mostly done and, the question of what did we discover? remain. Interpreting a gene list "by hand" is a daunting task. One cannot know everything about all the genes. Genes have multiple annotations and information type associated to them. From pathways where they play a role to molecular function, cellular compartment or biological processes such as diseases. For all those reason we use software that will try to organize the knowledge associated with these genes.
 
-In this practical we will use a new fancy tool call **[Enrichr](http://amp.pharm.mssm.edu/Enrichr/ "Enrichr")** ([Chen et al. BMC Bioinformatics, 2013](http://www.ncbi.nlm.nih.gov/pubmed/23586463 "Enrichr: interactive and collaborative HT... [BMC Bioinformatics. 2013] - PubMed - NCBI")). The Enrichr tool allow to assess your gene list against different knowledge database such [The Gene Ontology](http://www.geneontology.org "The Gene Ontology")or [KEGG](http://www.genome.jp/kegg/ "KEGG: Kyoto Encyclopedia of Genes and Genomes") and many more...
+In this practical we will use a new fancy tool call **[Enrichr](http://amp.pharm.mssm.edu/Enrichr/ "Enrichr")** ([Chen et al. BMC Bioinformatics, 2013](http://www.ncbi.nlm.nih.gov/pubmed/23586463 "Enrichr: interactive and collaborative HT... [BMC Bioinformatics. 2013] - PubMed - NCBI")). The Enrichr tool allow to assess your gene list against different knowledge database such [The Gene Ontology](http://www.geneontology.org "The Gene Ontology") or [KEGG](http://www.genome.jp/kegg/ "KEGG: Kyoto Encyclopedia of Genes and Genomes") and many more...
 
-Find the file call gene_list.txt inside the *results* folder. Either copy and paste the content in the text box of the Enrichr website or submit the file.
+**Find the file call gene_list.txt inside the *results* folder. Either copy and paste the content in the text box of the Enrichr website or submit the file.**
 
-Then click on the UP arrow in the bottom corner right.
+**Then click on the UP arrow in the bottom corner right.**
 
