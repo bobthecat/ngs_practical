@@ -1,6 +1,5 @@
 source('library.r')
 library(ChIPpeakAnno)
-library(RMySQL)
 library(biomaRt)
 library(org.Mm.eg.db)
 library(doMC)

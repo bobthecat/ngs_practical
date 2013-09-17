@@ -11,6 +11,7 @@ readBed <- function(loc='./'){
 	return(beds)
 }
 
+## Write a list of data.frame to a file
 write.lists <- function(List, file="toto.txt"){
 	for(i in 1:length(List)){
 		if(i==1){
@@ -21,6 +22,9 @@ write.lists <- function(List, file="toto.txt"){
 	}
 }
 
+## Function to clean the Entrez GeneID annotation.
+# If multiple geneID are presnt for an entry, we keep the first one only.
+# function specific to the pipeline.
 cleanEG <- function(DF){
 	eg <- DF$entrezgene	
 	eg <- strsplit(as.character(eg), ";")
@@ -30,6 +34,8 @@ cleanEG <- function(DF){
 	DF
 }
 
+## if a gene name is not associated to a geneID using biomaRt
+# then try to get its ID through org.Mm.egSYMBOL2EG
 addingMissingAnnot <- function(DF){
 	idxMissing <- which(is.na(DF$entrezgene))
 	print(length(idxMissing))
