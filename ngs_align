@@ -39,7 +39,7 @@ usage(){
 	echo -e '     --help\033[0m'
     echo '             Show this message'
 	echo 
-    echo -e '     \033[1m-g \033[4mcommand\033[0m'
+    echo -e '     \033[1m-f \033[4mcommand\033[0m'
 	echo '             The folder containing the fastQ file'
 	echo 
 	echo -e '     \033[1m-x \033[4mcommand\033[0m'
@@ -101,9 +101,9 @@ doQC(){
 		echo '==> Running trimGalore'
 		
 		# cleaning if get_data was interupted.
-		FILE_TEST=`test -f *_trimmed.fq && echo 1`
+		FILE_TEST=`test -f *_trimmed.fastq && echo 1`
 		if [[ ! -z $FILE_TEST ]]; then
-			rm -f *_trimmed.fq
+			rm -f *_trimmed.fastq
 		fi
 		
 		adapterArray=( $(awk '/#Sequence\tCount\tPercentage\tPossible Source/{flag=1;next} />>END_MODULE/{flag=0} flag {print}' */fastqc_data.txt | cut -f 1))
@@ -115,7 +115,7 @@ doQC(){
 		## Copy the original fastQ files for backup
 		echo "==> Making copy of original fastQ file before trimming..."
 		mkdir originals
-		cp $FILE originals/"$FILEROOT"_original.fq
+		cp $FILE originals/"$FILEROOT"_original.fastq
 		cp "$FILEROOT"_fastqc.zip originals/"$FILEROOT"_original-fastqc.zip
 		
 		for (( i=0; i<=$(( ${#adapterArray[@]} -1 )); i++ ))
@@ -123,7 +123,7 @@ doQC(){
 			echo -e "   - Removing adapter $(($i + 1)) out of ${#adapterArray[@]}"
 			# I redirect the output to dev/null
 			trim_galore --no_report_file --quality 20 -a ${adapterArray[$i]} --stringency ${#adapterArray[$i]} $FILE &>> $FILEROOT"_trimming_report.logFile"
-			mv "$FILEROOT"_trimmed.fq $FILE
+			mv "$FILEROOT"_trimmed.fastq $FILE
 		done
 		echo '   - trim_galore done'
 		
@@ -134,7 +134,7 @@ doQC(){
 		fastqc --quiet -f fastq $FILE
 		
 		# If reads are still too long
-		# seqtk trimfq -b 1 -e 50 GSM1074872_trimmed.fq > GSM1074872_trimmed_1-50.fq
+		# seqtk trimfq -b 1 -e 50 GSM1074872_trimmed.fastq > GSM1074872_trimmed_1-50.fastq
 	else
 		echo '   - fastQC reported NO overrepresented sequences'
 	fi # if ERROR
@@ -197,8 +197,8 @@ fi
 
 cd $FOLDER
 
-FILE=($(ls *.fq | perl -pe 's/(.*.fq)/\1/g'))
-FILEROOT=($(ls *.fq | perl -pe 's/(.*).fq/\1/g'))
+FILE=($(ls *.fastq | perl -pe 's/(.*.fastq)/\1/g'))
+FILEROOT=($(ls *.fastq | perl -pe 's/(.*).fastq/\1/g'))
 
 ##############
 ## fastQC

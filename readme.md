@@ -41,17 +41,17 @@ There are three types of control commonly used.
 
 **Open the terminal application and navigate to the NGS_pratical folder by typing the following:**
 
-	cd NGS_pratical
+	cd ngs_pratical
 
 **Now list the files in the directory by typing:**
 
 	ls
 
-You will find two folder (sample and control) containing each one file call GSM288346_Oct4_short.fq and GSM288358_GFP_short.fq, respectively. Both of them contain 30,000 lines of raw sequences in fastQ format. The fastQ format encodes at the same time the sequence and their quality.
+You will find **two folder (sample and control)** containing each one file call sample.fastq and control.fastq, respectively. Both of them contain 30,000 lines of raw sequences in fastQ format. The fastQ format encodes at the same time the sequence and their quality.
 
 **If you would like to have a look at the beginning of the file type the following:**
 
-	head GSM288346_Oct4_short.fq
+	head sample/sample.fq
 
 You can notice that there is no header (column title). This mean that fastQ files can be combined together easily just by appending one to the other. Of course this has to make sense biologically.
 
@@ -73,7 +73,7 @@ We will now align both files to the latest mouse reference genome release GRC83/
 **When this is finished take a look at the alignment reports:**
 
 	cat sample/report_bowtie_GSM288346_Oct4_short.txt
-	cat control/ report_bowtie_GSM288358_GFP_short.txt
+	cat control/report_bowtie_GSM288358_GFP_short.txt
 
 ### 2)	Quality check
 
@@ -87,11 +87,15 @@ http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/
 
 ### 3)	Calling peaks
 
-We are now ready to call the peaks. This mean determining of a binding event is real or just noise. To determe true signal from noise we use a program call MACS2. The algorithm will determined if a peak is a true positive in your sample using the control sample. You have to set a level of stringency (a p-value) to run the program. The following command generate the peaks.
+We are now ready to call the peaks. This mean determining of a binding event is real or just noise. To determe true signal from noise we use a program call MACS2. The algorithm will determined if a peak is a true positive in your sample using the control sample. You have to set a level of stringency (a p-value) to run the program. The following command generate the peaks for a stringency of 1e-9.
 
-	macs2 callpeak -t sample/GSM288346_Oct4_short.BED -c control/GSM288358_GFP_short.BED -g mm -n results_p1e-9 -f BED -p 1e-9 --nomodel --shiftsize=100
+	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-9 -f BED -p 1e-9 --nomodel --shiftsize=100
+	
+You can repeat the previous command to generate different peak at other stringency. For example 1e-5
 
-Of note, this will not work on the small dataset given in this practical. Hence, we generated in advance the peak file on the full version of the experiments. You can find the different files in the **results** folder.
+	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-5 -f BED -p 1e-5 --nomodel --shiftsize=100
+
+You can find the different files already computed for you in the **results** folder.
 
 ### 4)	Visualization on UCSC
 
@@ -106,17 +110,21 @@ What we are visualizing are the profiles of both the Oct4 sample and the control
 
 ### 5)	Extracting peak associated genes using R
 
-We will now attempt to extract the genes associated to the peaks found by MACS2. For this purpose we use a R package called `[ChIPpeakAnno](http://www.bioconductor.org/packages/2.12/bioc/html/ChIPpeakAnno.html "Bioconductor - ChIPpeakAnno")`. A peak is associated to a gene by looking at his position compared to the Transcription Start Site (TSS) of the neighbouring genes. A peak can be associated to more than one gene.
+We will now attempt to extract the genes associated to the peaks found by MACS2. For this purpose we use a R package called `[ChIPpeakAnno](http://www.bioconductor.org/packages/2.12/bioc/html/ChIPpeakAnno.html "Bioconductor - ChIPpeakAnno")`. 
 
-The instruction how to use the R package are describe in the help of the `ChIPpeakAnno` package and the commands ran to generate the gene list of today are in the `bed2gene.r` and `library.r` files in the gitHub repository. Briefly, there are several steps from peak to gene association to gene annotation with correct IDs and symbols.
+##### A peak is associated to a gene by looking at his position compared to the Transcription Start Site (TSS) of the neighbouring genes. A peak can be associated to more than one gene.
 
-We extract the list of gene symbol from the comma separated file using a little unix magic formula:
+The instruction how to use the R package are describe in the help of the `ChIPpeakAnno` package and the commands used to generate the gene list of today are in the `bed2gene.r` and `library.r` files in the gitHub repository. 
 
-	cat annotatedPeakList.csv | cut -d, -f15 | perl -pe 's/"(.*)"/\1/g' | perl -pe 's/^\n//g' | tail -n +2 | sort | uniq > gene_list.txt
+Briefly, the bed files are loaded in R and genomic regions compared to the TSS list for the mouse genome and associated to one or more gene. The rest of the work consist in annotating the gene with NCBI Entrez gene symbol.
+
+We extracted the list of gene symbol from the comma separated file using a little unix magic formula:
+
+	cat results/annotatedPeakList.csv | cut -d, -f15 | perl -pe 's/"(.*)"/\1/g' | perl -pe 's/^\n//g' | tail -n +2 | sort | uniq > results/gene_list.txt
 	
 To extract the list of geneID
 
-	cat annotatedPeakList.csv | cut -d, -f16 | perl -pe 's/"(\d+)"/\1/g' | perl -pe 's/^\n//g' | tail -n +2 | sort | uniq > gene_id.txt
+	cat results/annotatedPeakList.csv | cut -d, -f16 | perl -pe 's/"(\d+)"/\1/g' | perl -pe 's/^\n//g' | tail -n +2 | sort | uniq > results/gene_id.txt
 	
 ### 6)	Meta-analysis of the gene list
 
