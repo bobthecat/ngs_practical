@@ -98,6 +98,8 @@ You can repeat the previous command to generate different peak at other stringen
 	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-7 -f BED -p 1e-7 --nomodel --shiftsize=100
 	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-5 -f BED -p 1e-5 --nomodel --shiftsize=100
 	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-3 -f BED -p 1e-3 --nomodel --shiftsize=100
+	mv results_p1e* results/
+	parallel 'cat {} | cut -f 1-3 > {.}.3bed ; mv {.}.3bed {}' ::: results/*_peaks.bed
 
 You can find the different files already computed for you in the **results** folder.
 
