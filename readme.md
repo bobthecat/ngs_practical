@@ -14,7 +14,7 @@ The purpose of this practical course is to achieve an overview of Next Generatio
 
 Chromatin immunoprecipitation (ChIP) allows investigating interactions between a protein and the DNA of a cell. Immunoprecipitation use antibodies to recognized specific proteins that bind to DNA. After several steps the DNA bound by the protein is recovered and sequenced (ChIP-seq). The sequenced are then analysed using bioinformatics techniques that we will review today (See [wikipedia figure for ChIP-seq](https://en.wikipedia.org/wiki/ChIP-sequencing)). Also see Kidder, B. L. et al., ChIP-Seq: technical considerations for obtaining high-quality data. Nature immunology (2011).
 
-Today we will use an experiment published by Chen et al., Cell 2008; where key transcription factor proteins for pluripotency were studied in mouse embryonic stem cells. We will further focus on a single ChIP-seq for Oct4 and its associated control. Raw data can be found online on Gene Expression Omnibus (accession number: GSE11431). The Oct4 (Pou5f1) gene is a transcription factor (e.g. it controls other genes) important for early development of the embryo and maintenance of pluripotency.
+Today we will use an experiment published by Ang et al., Cell 2011; where key transcription factor proteins for pluripotency were studied in mouse embryonic stem cells. We will further focus on a single ChIP-seq for Oct4 and its associated control. Raw data can be found online on Gene Expression Omnibus (accession number: GSE22934). The Oct4 (Pou5f1) gene is a transcription factor (e.g. it controls other genes) important for early development of the embryo and maintenance of pluripotency.
 
 **[Q] What kind of questions can you answer using this technique?**
 
@@ -39,15 +39,17 @@ There are three types of control commonly used.
 
 ### 1)	Aligning raw sequences to reference genome
 
-**Open the terminal application and navigate to the NGS_pratical folder by typing the following:**
+**Open a terminal**
 
-	cd ngs_pratical
+**Navigate to the NGS_pratical folder by typing the following:**
+
+	cd Desktop/ngs_pratical
 
 **Now list the files in the directory by typing:**
 
 	ls
 
-You will find **two folder (sample and control)** containing each one file call sample.fastq and control.fastq, respectively. Both of them contain 30,000 lines of raw sequences in fastQ format. The fastQ format encodes at the same time the sequence and their quality.
+You will find **two folder (sample and control)** containing each one file call sample.fastq and control.fastq, respectively. Both the raw sequences in fastQ format. The fastQ format encodes at the same time the sequence and their quality.
 
 **If you would like to have a look at the beginning of the file type the following:**
 
@@ -79,7 +81,7 @@ We will now align both files to the latest mouse reference genome release GRC83/
 
 We will assess the quality control report for the sample and the control.
 
-Browse your way to the NGS_practical folder using your file system. Localize in the control and sample folder the fastQC folder and open the HTML file by clicking on it. The fastQC report present you on the left a summary of all the tests.
+Browse your way to the `ngs_practical` folder using your file system. Localize in the control and sample folder the fastQC folder and open the HTML file by clicking on it. The fastQC report present you on the left a summary of all the tests.
 
 The complete documentation for the fastQC report can be found here:
 
@@ -91,19 +93,23 @@ We are now ready to call the peaks. This mean determining of a binding event is 
 
 	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-9 -f BED -p 1e-9 --nomodel --shiftsize=100
 	
-You can repeat the previous command to generate different peak at other stringency. For example 1e-5
+You can repeat the previous command to generate different peak at other stringency. For example 1e-7, 1e-5 and 1e-3
 
+	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-7 -f BED -p 1e-7 --nomodel --shiftsize=100
 	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-5 -f BED -p 1e-5 --nomodel --shiftsize=100
+	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-3 -f BED -p 1e-3 --nomodel --shiftsize=100
 
 You can find the different files already computed for you in the **results** folder.
 
 ### 4)	Visualization on UCSC
 
-We will now visualize the sample and control profile as well as the peaks that have been called on the UCSC Genome Browser (**click on the following link**).
+We will now visualize the sample and control profile as well as the peaks that have been called on the UCSC Genome Browser. Here for simplifying the practical we prepared a session containing the different experiemnts.
+
+(**click on the following link**).
 
 http://genome-euro.ucsc.edu/cgi-bin/hgTracks?db=mm10&hgct_customText=http://lila.results.cscr.cam.ac.uk/david/ngs_practical/tracks
 
-What we are visualizing are the profiles of both the Oct4 sample and the control as well as the peaks called at two different levels of stringency (1e-5 and 1e-7).
+What we are visualizing are the profiles of both the Oct4 sample and the control as well as the peaks called at two different levels of stringency (1e-3, 1e-5, 1e-7 and 1e-9).
 
 **[Q] Which level of stringency is the most accurate?**
 
@@ -135,4 +141,5 @@ In this practical we will use a new fancy tool call **[Enrichr](http://amp.pharm
 **Find the file call gene_list.txt inside the *results* folder. Either copy and paste the content in the text box of the Enrichr website or submit the file.**
 
 **Then click on the UP arrow in the bottom corner right.**
+
 
