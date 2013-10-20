@@ -98,7 +98,9 @@ You can repeat the previous command to generate different peak at other stringen
 	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-7 -f BED -p 1e-7 --nomodel --shiftsize=100
 	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-5 -f BED -p 1e-5 --nomodel --shiftsize=100
 	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-3 -f BED -p 1e-3 --nomodel --shiftsize=100
+	# we move the results to to the result folder
 	mv results_p1e* results/
+	# we clean the peak files (.bed) from the unecessary columns for our analysis
 	parallel 'cat {} | cut -f 1-3 > {.}.3bed ; mv {.}.3bed {}' ::: results/*_peaks.bed
 
 You can find the different files already computed for you in the **results** folder.
@@ -136,7 +138,13 @@ To extract the list of geneID
 	
 ### 6)	Meta-analysis of the gene list
 
-We are now at the interpretation level. The bioinformatic ground work is mostly done and, the question of what did we discover? remain. Interpreting a gene list "by hand" is a daunting task. One cannot know everything about all the genes. Genes have multiple annotations and information type associated to them. From pathways where they play a role to molecular function, cellular compartment or biological processes such as diseases. For all those reason we use software that will try to organize the knowledge associated with these genes.
+We are now at the interpretation level. The bioinformatic ground work is mostly done and, the question of what did we discover? remain.
+
+Interpreting a gene list "by hand" is a daunting task. 
+
+**Do the following: open the gene_list.txt file in the results folder.**
+
+One cannot know everything about all the genes. Genes have multiple annotations and information type associated to them. From pathways where they play a role to molecular function, cellular compartment or biological processes such as diseases. For all those reason we use software that will try to organize the knowledge associated with these genes.
 
 In this practical we will use a new fancy tool call **[Enrichr](http://amp.pharm.mssm.edu/Enrichr/ "Enrichr")** ([Chen et al. BMC Bioinformatics, 2013](http://www.ncbi.nlm.nih.gov/pubmed/23586463 "Enrichr: interactive and collaborative HT... [BMC Bioinformatics. 2013] - PubMed - NCBI")). The Enrichr tool allow to assess your gene list against different knowledge database such [The Gene Ontology](http://www.geneontology.org "The Gene Ontology") or [KEGG](http://www.genome.jp/kegg/ "KEGG: Kyoto Encyclopedia of Genes and Genomes") and many more...
 
