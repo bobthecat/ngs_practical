@@ -124,9 +124,9 @@ We will now attempt to extract the genes associated to the peaks found by MACS2.
 
 > A peak is associated to a gene by looking at his position compared to the Transcription Start Site (TSS) of the neighbouring genes. A peak can be associated to more than one gene.
 
-The instruction how to use the R package are describe in the help of the `ChIPpeakAnno` package and the commands used to generate the gene list of today are in the `bed2gene.r` and `library.r` files in the gitHub repository. 
+The instruction how to use the R package are describe in the help of the `ChIPpeakAnno` package and the commands used to generate the gene list of today are in the `bed2gene.r` and `library.r` files in this gitHub repository. 
 
-Briefly, the bed files are loaded in R and genomic regions compared to the TSS list for the mouse genome and associated to one or more gene. The rest of the work consist in annotating the gene with NCBI Entrez gene symbol.
+Briefly, the bed files are loaded in R and genomic regions compared to the TSS list for the mouse genome and associated to one or more gene. The rest of the work consist in annotating the gene with NCBI Entrez gene symbols.
 
 We extracted the list of gene symbol from the comma separated file using a little unix magic formula:
 
@@ -152,4 +152,7 @@ In this practical we will use a new fancy tool call **[Enrichr](http://amp.pharm
 
 **Then click on the UP arrow in the bottom corner right.**
 
+### 7) Questions and exercises
+
+([See the wiki.](https://github.com/bobthecat/ngs_practical/wiki/NGS-practical-questions-and-exercises))
 
