@@ -120,7 +120,7 @@ What we are visualizing are the profiles of both the Oct4 sample and the control
 
 ### 5)	Extracting peak associated genes using R
 
-We will now attempt to extract the genes associated to the peaks found by MACS2. For this purpose we use a R package called `[ChIPpeakAnno](http://www.bioconductor.org/packages/2.12/bioc/html/ChIPpeakAnno.html "Bioconductor - ChIPpeakAnno")`. 
+We will now attempt to extract the genes associated to the peaks found by MACS2. For this purpose we use a R package called [ChIPpeakAnno](http://www.bioconductor.org/packages/2.12/bioc/html/ChIPpeakAnno.html "Bioconductor - ChIPpeakAnno"). 
 
 ##### A peak is associated to a gene by looking at his position compared to the Transcription Start Site (TSS) of the neighbouring genes. A peak can be associated to more than one gene.
 
