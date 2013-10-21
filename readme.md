@@ -16,24 +16,6 @@ Chromatin immunoprecipitation (ChIP) allows investigating interactions between a
 
 Today we will use an experiment published by Ang et al., Cell 2011; where key transcription factor proteins for pluripotency were studied in mouse embryonic stem cells. We will further focus on a single ChIP-seq for Oct4 and its associated control. Raw data can be found online on Gene Expression Omnibus (accession number: GSE22934). The Oct4 (Pou5f1) gene is a transcription factor (e.g. it controls other genes) important for early development of the embryo and maintenance of pluripotency.
 
-**[Q] What kind of questions can you answer using this technique?**
-
-* Gene regulation information. Discover gene regulatory networks.
-* DNA motif recognised by Otc4 in mouse embryonic stem cells
-* If compared to other Oct4 experiments one can learn about differential DNA binding profile.
-
-**[Q] What are you sequencing?**
-
-* DNA regions bound by the protein of interest
-* Those are small fragments. The usual experimental protocol aim at fragments ~150-300bp long.
-
-**[Q] How do you control for unspecific binding event?**
-
-There are three types of control commonly used.
-
-* IgG (nonspecific immunoglobulin G)
-* Input chromatin (sheared DNA)
-* Knockdown of the factor (KO or siRNA)
 
 ## Practical
 
@@ -114,8 +96,6 @@ We will now visualize the sample and control profile as well as the peaks that h
 http://genome-euro.ucsc.edu/cgi-bin/hgTracks?db=mm10&hgct_customText=http://lila.results.cscr.cam.ac.uk/david/ngs_practical/tracks
 
 What we are visualizing are the profiles of both the Oct4 sample and the control as well as the peaks called at two different levels of stringency (1e-3, 1e-5, 1e-7 and 1e-9).
-
-**[Q] Which level of stringency is the most accurate?**
 
 
 ### 5)	Extracting peak associated genes using R
