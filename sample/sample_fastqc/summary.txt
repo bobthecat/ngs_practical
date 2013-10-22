@@ -1,0 +1,11 @@
+PASS	Basic Statistics	sample.fastq
+PASS	Per base sequence quality	sample.fastq
+PASS	Per sequence quality scores	sample.fastq
+PASS	Per base sequence content	sample.fastq
+PASS	Per base GC content	sample.fastq
+WARN	Per sequence GC content	sample.fastq
+PASS	Per base N content	sample.fastq
+WARN	Sequence Length Distribution	sample.fastq
+PASS	Sequence Duplication Levels	sample.fastq
+WARN	Overrepresented sequences	sample.fastq
+WARN	Kmer Content	sample.fastq

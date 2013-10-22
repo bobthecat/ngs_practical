@@ -1,0 +1,11 @@
+PASS	Basic Statistics	control.fastq
+PASS	Per base sequence quality	control.fastq
+PASS	Per sequence quality scores	control.fastq
+WARN	Per base sequence content	control.fastq
+PASS	Per base GC content	control.fastq
+PASS	Per sequence GC content	control.fastq
+PASS	Per base N content	control.fastq
+PASS	Sequence Length Distribution	control.fastq
+WARN	Sequence Duplication Levels	control.fastq
+PASS	Overrepresented sequences	control.fastq
+WARN	Kmer Content	control.fastq
