@@ -15,8 +15,8 @@ resource='/home/Programs/bioinformatics_resources/bowtie2_indexes_ucsc/'
 # set to no if you do not want to use parallel
 use_parallel='yes'
 # Sensitivity level for trimGalore
-# Choose either WARN or FAIL (default)
-trimLevel="FAIL"
+# Choose either WARN (default) or FAIL
+trimLevel="WARN"
 
 usage(){
 	echo 
@@ -93,7 +93,14 @@ doQC(){
 	# In case of multiple fastQ files for paired data you have to process the fastQC/trim_galore step differently.
 	# In case of merged files you already ran fastQC and rtimgalore so no need for this step.
 	
-	ERROR="$(grep -h -E $trimLevel$'\tOverrepresented sequences' *_fastqc/summary.txt | wc -l)"
+	if [[ $trimLevel == "WARN" ]]; then
+		ERROR="$(grep -h -E $trimLevel$'\tOverrepresented sequences' *_fastqc/summary.txt | wc -l)"
+		if [[ $ERROR == 0 ]]; then
+			ERROR="$(grep -h -E FAIL$'\tOverrepresented sequences' *_fastqc/summary.txt | wc -l)"
+		fi
+	else
+		ERROR="$(grep -h -E $trimLevel$'\tOverrepresented sequences' *_fastqc/summary.txt | wc -l)"
+	fi
 	
 	if [[ $ERROR != 0 ]]; then
 		echo -e '\033[1m\e[00;31m   - fastQC FAIL   Overrepresented sequences\e[00m (adapters)\033[0m'
