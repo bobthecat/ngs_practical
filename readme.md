@@ -25,7 +25,7 @@ Today we will use an experiment published by Ang et al., Cell 2011; where key tr
 
 **Navigate to the NGS_pratical folder by typing the following:**
 
-	cd Desktop/ngs_pratical
+	cd Desktop/ngs_practical
 
 **Now list the files in the directory by typing:**
 
@@ -35,7 +35,7 @@ You will find **two folder (sample and control)** containing each one file call 
 
 **If you would like to have a look at the beginning of the file type the following:**
 
-	head sample/sample.fq
+	head sample/sample.fastq
 
 You can notice that there is no header (column title). This mean that fastQ files can be combined together easily just by appending one to the other. Of course this has to make sense biologically.
 
@@ -56,8 +56,8 @@ We will now align both files to the latest mouse reference genome release GRC83/
 
 **When this is finished take a look at the alignment reports:**
 
-	cat sample/report_bowtie_GSM288346_Oct4_short.txt
-	cat control/report_bowtie_GSM288358_GFP_short.txt
+	cat sample/report_bowtie_sample.txt
+	cat control/report_bowtie_control.txt
 
 ### 2)	Quality check
 
@@ -89,7 +89,7 @@ You can find the different files already computed for you in the **results** fol
 
 ### 4)	Visualization on UCSC
 
-We will now visualize the sample and control profile as well as the peaks that have been called on the UCSC Genome Browser. Here for simplifying the practical we prepared a session containing the different experiemnts.
+We will now visualize the sample and control profile as well as the peaks that have been called on the UCSC Genome Browser. Here for simplifying the practical we prepared a session containing the different experiments.
 
 (**click on the following link**).
 
