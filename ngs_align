@@ -16,150 +16,150 @@ resource='/home/Programs/bioinformatics_resources/bowtie2_indexes_ucsc/'
 use_parallel='yes'
 # Sensitivity level for trimGalore
 # Choose either WARN (default) or FAIL
-trimLevel="WARN"
+trimLevel="FAIL"
 
 usage(){
-	echo 
-    echo -e '\033[1mUtility prohgram to align ChIP-seq data to reference genome\033[0m'
-	echo 
-	echo -e '\033[1mNAME\033[0m'
-	echo '     ngs_align'
-	echo 
-	echo -e '\033[1mSYNOPSIS\033[0m'
-	echo '     usage: ngs_align [-f folder] [-x ref_genome]'
-	echo 
+    echo 
+    echo -e '\033[1mUtility program to align ChIP-seq data to reference genome\033[0m'
+    echo 
+    echo -e '\033[1mNAME\033[0m'
+    echo '     ngs_align'
+    echo 
+    echo -e '\033[1mSYNOPSIS\033[0m'
+    echo '     usage: ngs_align [-f folder] [-x ref_genome]'
+    echo 
     echo -e '\033[1mDESCRIPTION\033[0m'
-	echo '     This utility will process raw sequence data from ChIP-seq experiments in fastQ format.'
-	echo '     ngs_align run FastQC quality check on each fastQ file, trim the adpaters if present,'
-	echo '     and run the aligner Bowtie2.'
-	echo 
-	echo '     The options are as follows:'
-	echo 
+    echo '     This utility will process raw sequence data from ChIP-seq experiments in fastQ format.'
+    echo '     ngs_align run FastQC quality check on each fastQ file, trim the adpaters if present,'
+    echo '     and run the aligner Bowtie2.'
+    echo 
+    echo '     The options are as follows:'
+    echo 
     echo -e '     \033[1m-h'
-	echo -e '     --help\033[0m'
+    echo -e '     --help\033[0m'
     echo '             Show this message'
-	echo 
+    echo 
     echo -e '     \033[1m-f \033[4mcommand\033[0m'
-	echo '             The folder containing the fastQ file'
-	echo 
-	echo -e '     \033[1m-x \033[4mcommand\033[0m'
-	echo '             [optional] Reference genome: mm10, mm9, hg19, rn4 or rn5. If empty program will quit after fastQC'
-	echo 
-	echo '     Examples:'
-	echo '             ngs_align -g sample -x mm10'
-	echo 
-	echo  -e '\033[1mAUTHOR\033[0m'
-	echo '     David Ruau <davidruau@gmail.com>'
-	echo '     Department of Haematology, Gottgens lab'
-	echo '     CIMR, University of Cambridge'
-	echo '     Licence: GPL (>=2)'
-	echo
-	echo '16 Sept, 2013'
-	exit 1
+    echo '             The folder containing the fastQ file'
+    echo 
+    echo -e '     \033[1m-x \033[4mcommand\033[0m'
+    echo '             [optional] Reference genome: mm10, mm9, hg19, rn4 or rn5. If empty program will quit after fastQC'
+    echo 
+    echo '     Examples:'
+    echo '             ngs_align -f sample -x mm10'
+    echo 
+    echo  -e '\033[1mAUTHOR\033[0m'
+    echo '     David Ruau <davidruau@gmail.com>'
+    echo '     Department of Haematology, Gottgens lab'
+    echo '     CIMR, University of Cambridge'
+    echo '     Licence: GPL (>=2)'
+    echo
+    echo '16 Sept, 2013'
+    exit 1
 }
 
 do_bowtie(){
-	FILE=$1
-	FILEROOT=$2
-	GENOME=$3
-	
-	case "$GENOME" in
-		mm10|mm9|hg19|rn4|rn5 )
-			echo '==> Running Bowtie2...'
-			REPORT="report_bowtie_"$FILEROOT".txt"
-			
-			samFile=$FILEROOT'_full.sam'
-			echo "   - Processing $FILE"
-			bowtie2 -k 2 -N 1 --mm -x $resource$GENOME -U $FILE -S $samFile -p 20 $QUALITY 2> $REPORT
-			# We keep only the uniquely aligned reads
-			grep -v XS:i: $samFile | awk '{if($2==0 || $2==16 || $1~/^@/) print $0}' >> $FILEROOT'.sam'
-			
-			rm $samFile
-			echo
-			echo -e "   - Bowtie2 report in \e[00;31m$REPORT\e[00m"
-			;;
-		* )
-			echo "==> Unknown or No reference genome given. Exiting... Bowtie2 not run."
-			;;
-	esac
+    FILE=$1
+    FILEROOT=$2
+    GENOME=$3
+    
+    case "$GENOME" in
+        mm10|mm9|hg19|rn4|rn5 )
+            echo '==> Running Bowtie2...'
+            REPORT="report_bowtie_"$FILEROOT".txt"
+            
+            samFile=$FILEROOT'_full.sam'
+            echo "   - Processing $FILE"
+            bowtie2 -k 2 -N 1 --mm -x $resource$GENOME -U $FILE -S $samFile -p 20 $QUALITY 2> $REPORT
+            # We keep only the uniquely aligned reads
+            grep -v XS:i: $samFile | awk '{if($2==0 || $2==16 || $1~/^@/) print $0}' >> $FILEROOT'.sam'
+            
+            rm $samFile
+            echo
+            echo -e "   - Bowtie2 report in \e[00;31m$REPORT\e[00m"
+            ;;
+        * )
+            echo "==> Unknown or No reference genome given. Exiting... Bowtie2 not run."
+            ;;
+    esac
 }
 
 doQC(){
-	FILE=$1
-	FILEROOT=$2
-	
-	fastqc --quiet -f fastq $FILE
-	
-	# In case of multiple fastQ files for paired data you have to process the fastQC/trim_galore step differently.
-	# In case of merged files you already ran fastQC and rtimgalore so no need for this step.
-	
-	if [[ $trimLevel == "WARN" ]]; then
-		ERROR="$(grep -h -E $trimLevel$'\tOverrepresented sequences' *_fastqc/summary.txt | wc -l)"
-		if [[ $ERROR == 0 ]]; then
-			ERROR="$(grep -h -E FAIL$'\tOverrepresented sequences' *_fastqc/summary.txt | wc -l)"
-		fi
-	else
-		ERROR="$(grep -h -E $trimLevel$'\tOverrepresented sequences' *_fastqc/summary.txt | wc -l)"
-	fi
-	
-	if [[ $ERROR != 0 ]]; then
-		echo -e '\033[1m\e[00;31m   - fastQC FAIL   Overrepresented sequences\e[00m (adapters)\033[0m'
-		echo  
-		echo '==> Running trimGalore'
-		
-		# cleaning if get_data was interupted.
-		FILE_TEST=`test -f *_trimmed.fastq && echo 1`
-		if [[ ! -z $FILE_TEST ]]; then
-			rm -f *_trimmed.fastq
-		fi
-		
-		adapterArray=( $(awk '/#Sequence\tCount\tPercentage\tPossible Source/{flag=1;next} />>END_MODULE/{flag=0} flag {print}' */fastqc_data.txt | cut -f 1))
-		
-		## remove the unspecific sequence from array
-		## those pattern remove all sequences from fastQ files
-		# declare -a adapterArray=( ${adapterArray[@]/*NNNNNNNNNNNNNNNNNNNNNNNNN/} )			
-		
-		## Copy the original fastQ files for backup
-		echo "==> Making copy of original fastQ file before trimming..."
-		mkdir originals
-		cp $FILE originals/"$FILEROOT"_original.fastq
-		cp "$FILEROOT"_fastqc.zip originals/"$FILEROOT"_original-fastqc.zip
-		
-		for (( i=0; i<=$(( ${#adapterArray[@]} -1 )); i++ ))
-		do
-			echo -e "   - Removing adapter $(($i + 1)) out of ${#adapterArray[@]}"
-			# I redirect the output to dev/null
-			trim_galore --no_report_file --quality 20 -a ${adapterArray[$i]} --stringency ${#adapterArray[$i]} $FILE &>> $FILEROOT"_trimming_report.logFile"
-			mv "$FILEROOT"_trimmed.fastq $FILE
-		done
-		echo '   - trim_galore done'
-		
-		# erase old fastQC report
-		rm -Rf "$FILEROOT"_fastqc*
-		# run fastQC on trimmed file
-		echo '   - fastQC on trimmed fastQ file...'
-		fastqc --quiet -f fastq $FILE
-		
-		# If reads are still too long
-		# seqtk trimfq -b 1 -e 50 GSM1074872_trimmed.fastq > GSM1074872_trimmed_1-50.fastq
-	else
-		echo '   - fastQC reported NO overrepresented sequences'
-	fi # if ERROR
-	
-	## get the PHRED info from fastQC report
-	encoding=($(grep -h -E "^Encoding(.*)" */fastqc_data.txt | sort | uniq | perl -pe 's/Encoding\s+(.*)/\1/g'))
-	echo "   - fastQ format: "$encoding"<<"
-	if [[ $encoding == "Sanger / Illumina 1.9" ]] || [[ $encoding == "Sanger" ]]; then
-		echo '   - Quality encoding: phred33'
-		QUALITY="--phred33"
-	elif [[ $encoding == "Illumina 1.5" ]] || [[ $encoding == "Illumina <1.3" ]] || [[ $encoding == "Illumina 1.3" ]]; then
-		echo '   - Quality encoding: phred64'
-		QUALITY="--phred64"
-	else
-		echo "\033[1m\e[00;31m***\e[00m fastQ format encoding not recognised! Report fastQC report to developer. Assuming default --phred33 \e[00;31m***\e[00m\033[0m"
-		QUALITY="--phred33"
-		# QUALITY="--solexa-quals"
-	fi
+    FILE=$1
+    FILEROOT=$2
+    
+    fastqc --quiet -f fastq $FILE
+    
+    # In case of multiple fastQ files for paired data you have to process the fastQC/trim_galore step differently.
+    # In case of merged files you already ran fastQC and rtimgalore so no need for this step.
+    
+    if [[ $trimLevel == "WARN" ]]; then
+        ERROR="$(grep -h -E $trimLevel$'\tOverrepresented sequences' *_fastqc/summary.txt | wc -l)"
+        if [[ $ERROR == 0 ]]; then
+            ERROR="$(grep -h -E FAIL$'\tOverrepresented sequences' *_fastqc/summary.txt | wc -l)"
+        fi
+    else
+        ERROR="$(grep -h -E $trimLevel$'\tOverrepresented sequences' *_fastqc/summary.txt | wc -l)"
+    fi
+    
+    if [[ $ERROR != 0 ]]; then
+        echo -e '\033[1m\e[00;31m   - fastQC FAIL   Overrepresented sequences\e[00m (adapters)\033[0m'
+        echo  
+        echo '==> Running trimGalore'
+        
+        # cleaning if get_data was interupted.
+        FILE_TEST=`test -f *_trimmed.fastq && echo 1`
+        if [[ ! -z $FILE_TEST ]]; then
+            rm -f *_trimmed.fastq
+        fi
+        
+        adapterArray=( $(awk '/#Sequence\tCount\tPercentage\tPossible Source/{flag=1;next} />>END_MODULE/{flag=0} flag {print}' */fastqc_data.txt | cut -f 1))
+        
+        ## remove the unspecific sequence from array
+        ## those pattern remove all sequences from fastQ files
+        # declare -a adapterArray=( ${adapterArray[@]/*NNNNNNNNNNNNNNNNNNNNNNNNN/} )            
+        
+        ## Copy the original fastQ files for backup
+        echo "==> Making copy of original fastQ file before trimming..."
+        mkdir originals
+        cp $FILE originals/"$FILEROOT"_original.fastq
+        cp "$FILEROOT"_fastqc.zip originals/"$FILEROOT"_original-fastqc.zip
+        
+        for (( i=0; i<=$(( ${#adapterArray[@]} -1 )); i++ ))
+        do
+            echo -e "   - Removing adapter $(($i + 1)) out of ${#adapterArray[@]}"
+            # I redirect the output to dev/null
+            trim_galore --no_report_file --quality 20 -a ${adapterArray[$i]} --stringency ${#adapterArray[$i]} $FILE &>> $FILEROOT"_trimming_report.logFile"
+            mv "$FILEROOT"_trimmed.fq $FILE
+        done
+        echo '   - trim_galore done'
+        
+        # erase old fastQC report
+        rm -Rf "$FILEROOT"_fastqc*
+        # run fastQC on trimmed file
+        echo '   - fastQC on trimmed fastQ file...'
+        fastqc --quiet -f fastq $FILE
+        
+        # If reads are still too long
+        # seqtk trimfq -b 1 -e 50 GSM1074872_trimmed.fastq > GSM1074872_trimmed_1-50.fastq
+    else
+        echo '   - fastQC reported NO overrepresented sequences'
+    fi # if ERROR
+    
+    ## get the PHRED info from fastQC report
+    encoding=($(grep -h -E "^Encoding(.*)" */fastqc_data.txt | sort | uniq | perl -pe 's/Encoding\s+(.*)/\1/g'))
+    echo "   - fastQ format: "$encoding"<<"
+    if [[ $encoding == "Sanger / Illumina 1.9" ]] || [[ $encoding == "Sanger" ]]; then
+        echo '   - Quality encoding: phred33'
+        QUALITY="--phred33"
+    elif [[ $encoding == "Illumina 1.5" ]] || [[ $encoding == "Illumina <1.3" ]] || [[ $encoding == "Illumina 1.3" ]]; then
+        echo '   - Quality encoding: phred64'
+        QUALITY="--phred64"
+    else
+        echo "\033[1m\e[00;31m***\e[00m fastQ format encoding not recognised! Report fastQC report to developer. Assuming default --phred33 \e[00;31m***\e[00m\033[0m"
+        QUALITY="--phred33"
+        # QUALITY="--solexa-quals"
+    fi
 }
 
 FOLDER=
@@ -171,7 +171,7 @@ GENOME=
 OPTS=`getopt -o hf:x: --long help -- "$@"`
 if [ $? != 0 ]
 then
-	# something went wrong, getopt will put out an error message for us
+    # something went wrong, getopt will put out an error message for us
     exit 1
 fi
 
@@ -179,22 +179,19 @@ eval set -- "$OPTS"
 
 while true
 do
-	case "$1" in
+    case "$1" in
         -h | --help)
-            usage
-			;;
-		# for options with required arguments, an additional shift is required
+             usage;;
+        # for options with required arguments, an additional shift is required
         -f)
-            FOLDER=$2
-			shift 2;;
-		-x)
-			GENOME=$2
-			shift 2;;
-		--) break;;
-		--*) break;;
-        -?)
-            usage
-            ;;
+             FOLDER=$2
+             shift 2;;
+        -x)
+             GENOME=$2
+             shift 2;;
+        --)  break;;
+        --*) break;;
+        -?)  usage;;
     esac
 done
 
@@ -226,4 +223,3 @@ tree -shFL 1 $FOLDER
 
 echo 
 echo -e "\033[1m\e[00;31mdone.\e[00m\033[0m"
-
