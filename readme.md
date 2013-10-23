@@ -83,7 +83,7 @@ You can repeat the previous command to generate different peak at other stringen
 	# we move the results to to the result folder
 	mv results_p1e* results/
 	# we clean the peak files (.bed) from the unecessary columns for our analysis
-	parallel 'cat {} | cut -f1-3 > {.}.3bed ; mv {.}.3bed {}' ::: results/*_peaks.bed
+	parallel --gnu 'cat {} | cut -f1-3 > {.}.3bed ; mv {.}.3bed {}' ::: results/*_peaks.bed
 
 You can find the different files already computed for you in the **results** folder.
 
