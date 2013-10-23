@@ -48,11 +48,11 @@ We will now align both files to the latest mouse reference genome release GRC83/
 
 **Type the following on your terminal:**
 
-	ngs_align –f sample –x mm10
-	sam2bigWig –f sample –x mm10
-	
-	ngs_align –f control –x mm10
-	sam2bigWig –f control –x mm10
+	ngs_align -f sample -x mm10
+	sam2bigWig -f sample -x mm10
+
+	ngs_align -f control -x mm10
+	sam2bigWig -f control -x mm10
 
 **When this is finished take a look at the alignment reports:**
 
