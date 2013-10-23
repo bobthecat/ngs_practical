@@ -97,7 +97,20 @@ http://genome-euro.ucsc.edu/cgi-bin/hgTracks?db=mm10&hgct_customText=http://lila
 
 What we are visualizing are the profiles of both the Oct4 sample and the control as well as the peaks called at two different levels of stringency (1e-3, 1e-5, 1e-7 and 1e-9).
 
-Genomic coordinates: `chr1:164,204,459-164,597,842`
+**Visit the following genes by typing their symbol in UCSC:**
+
+* Pou5f1 (positive control)
+
+* Dppa3 (positive control)
+
+* Nanog (positive control)
+
+* Lefty2 (negative control)
+
+* Neurog1 (negative control)
+
+**Also visit the following region:**
+* `chr1:164,204,459-164,597,842`
 
 ### 5)	Extracting peak associated genes using R
 
