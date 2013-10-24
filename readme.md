@@ -21,19 +21,17 @@ Today we will use an experiment published by Ang et al., Cell 2011; where key tr
 
 ### 1)	Introduction
 
-**Open a terminal**
+**1.1) Short Intorduction to UNIX**    
 
-**1.1) Navigate to the NGS_pratical folder by typing the following:**
 
-	cd Desktop/ngs_practical
+**1.2) Navigate to the ngs_pratical folder which is on the desktop**
 
-**1.2) Now list the files in the directory by typing:**
 
-	tree -L 2
+**1.3) Now list the files in the directory:**
 
 You will find **two folder (sample and control)** containing each one file call sample.fastq and control.fastq, respectively. Both the raw sequences in fastQ format. The fastQ format encodes at the same time the sequence and their quality.
 
-**1.3) Have a look at the beginning of the file type the following:**
+**1.4) Have a look at the beginning of the file type the following:**
 
 	head sample/sample.fastq
 
@@ -131,11 +129,11 @@ What we are visualizing are the profiles of both the Oct4 sample and the control
 
 * Dppa3 (positive control)
 
-* Nanog (positive control)
+* Psgg1 (positive control)
 
-* Lefty2 (negative control)
+* Sox2 (positive control)
 
-* Neurog1 (negative control)
+* Myc (negative control)
 
 **Also visit the following region:**
 * `chr1:164,204,459-164,597,842`
