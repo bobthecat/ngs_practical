@@ -19,7 +19,7 @@ Today we will use an experiment published by Ang et al., Cell 2011; where key tr
 
 ## Practical
 
-### 1)	Aligning raw sequences to reference genome
+### 1)	Introduction
 
 **Open a terminal**
 
@@ -33,13 +33,16 @@ Today we will use an experiment published by Ang et al., Cell 2011; where key tr
 
 You will find **two folder (sample and control)** containing each one file call sample.fastq and control.fastq, respectively. Both the raw sequences in fastQ format. The fastQ format encodes at the same time the sequence and their quality.
 
-**If you would like to have a look at the beginning of the file type the following:**
+**Have a look at the beginning of the file type the following:**
 
 	head sample/sample.fastq
 
 You can notice that there is no header (column title). This mean that fastQ files can be combined together easily just by appending one to the other. Of course this has to make sense biologically.
 
-We will now align both files to the latest mouse reference genome release GRC83/mm10 using a in-house scripts (ngs_align and sam2bigWig). These scripts combine multiple steps:
+
+### 2) Aligning raw sequences to a reference genome
+
+We will now align both files (sample and control) to the latest mouse reference genome release GRC83/mm10 using a in-house scripts (ngs_align and sam2bigWig). These scripts combine multiple steps:
 
 1. Check the raw sequences for quality and error.
 2. Remove any over-represented sequences (adapters)
@@ -49,17 +52,17 @@ We will now align both files to the latest mouse reference genome release GRC83/
 **Type the following on your terminal:**
 
 	ngs_align -f sample -x mm10
-	sam2bigWig -f sample -x mm10
 
 	ngs_align -f control -x mm10
-	sam2bigWig -f control -x mm10
 
 **When this is finished take a look at the alignment reports:**
 
 	cat sample/report_bowtie_sample.txt
+	
 	cat control/report_bowtie_control.txt
 
-### 2)	Quality check
+
+### 3) Raw sequences quality check
 
 We will assess the quality control report for the sample and the control.
 
@@ -69,7 +72,25 @@ The complete documentation for the fastQC report can be found here:
 
 http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/
 
-### 3)	Calling peaks
+
+### 4) Generating genome profiles
+
+The next processing step after the alignment is to generate genome wide alignment profile that can be displayed in a genome browser. This step is also necessary for downstream analysis to call peaks notably.
+
+For this purpose we will use a wrapper script combining several steps:
+
+1. Transform bowtie output to BED files
+2. Extend the read to 200bp minimum
+3. Transform to bedgraph format then to bigWig
+
+**Type the following on your terminal:**
+
+	sam2bigWig -f sample -x mm10
+
+	sam2bigWig -f control -x mm10
+
+
+### 5) Calling peaks
 
 We are now ready to call the peaks. This mean determining of a binding event is real or just noise. To determe true signal from noise we use a program call MACS2. The algorithm will determined if a peak is a true positive in your sample using the control sample. You have to set a level of stringency (a p-value) to run the program. The following command generate the peaks for a stringency of 1e-9.
 
@@ -87,7 +108,8 @@ You can repeat the previous command to generate different peak at other stringen
 
 You can find the different files already computed for you in the **results** folder.
 
-### 4)	Visualization on UCSC
+
+### 6)	Visualization on UCSC
 
 We will now visualize the sample and control profile as well as the peaks that have been called on the UCSC Genome Browser. Here for simplifying the practical we prepared a session containing the different experiments.
 
@@ -112,7 +134,8 @@ What we are visualizing are the profiles of both the Oct4 sample and the control
 **Also visit the following region:**
 * `chr1:164,204,459-164,597,842`
 
-### 5)	Extracting peak associated genes using R
+
+### 7)	Extracting peak associated genes using R
 
 We will now attempt to extract the genes associated to the peaks found by MACS2. For this purpose we use a R package called [ChIPpeakAnno](http://www.bioconductor.org/packages/2.12/bioc/html/ChIPpeakAnno.html "Bioconductor - ChIPpeakAnno"). 
 
@@ -130,7 +153,8 @@ To extract the list of geneID
 
 	cat results/annotatedPeakList.csv | cut -d, -f16 | perl -pe 's/"(\d+)"/\1/g' | perl -pe 's/^\n//g' | tail -n +2 | sort | uniq > results/gene_id.txt
 	
-### 6)	Meta-analysis of the gene list
+
+### 8)	Meta-analysis of the gene list
 
 We are now at the interpretation level. The bioinformatic ground work is mostly done and, the question of what did we discover? remain.
 
@@ -146,7 +170,8 @@ In this practical we will use a new fancy tool call **[Enrichr](http://amp.pharm
 
 **Then click on the UP arrow in the bottom corner right.**
 
-### 7) Questions and exercises
+
+### 9) Questions and exercises
 
 ([See the wiki.](https://github.com/bobthecat/ngs_practical/wiki/NGS-practical-questions-and-exercises))
 
