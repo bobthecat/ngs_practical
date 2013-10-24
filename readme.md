@@ -23,17 +23,17 @@ Today we will use an experiment published by Ang et al., Cell 2011; where key tr
 
 **Open a terminal**
 
-**Navigate to the NGS_pratical folder by typing the following:**
+**1.1) Navigate to the NGS_pratical folder by typing the following:**
 
 	cd Desktop/ngs_practical
 
-**Now list the files in the directory by typing:**
+**1.2) Now list the files in the directory by typing:**
 
-	ls
+	tree -L 2
 
 You will find **two folder (sample and control)** containing each one file call sample.fastq and control.fastq, respectively. Both the raw sequences in fastQ format. The fastQ format encodes at the same time the sequence and their quality.
 
-**Have a look at the beginning of the file type the following:**
+**1.3) Have a look at the beginning of the file type the following:**
 
 	head sample/sample.fastq
 
@@ -49,13 +49,13 @@ We will now align both files (sample and control) to the latest mouse reference 
 3. Align to mm10 using Bowtie2
 4. Remove sequences that did not align uniquely
 
-**Type the following on your terminal:**
+**2.1) Type the following on your terminal:**
 
 	ngs_align -f sample -x mm10
 
 	ngs_align -f control -x mm10
 
-**When this is finished take a look at the alignment reports:**
+**2.2) When this is finished take a look at the alignment reports:**
 
 	cat sample/report_bowtie_sample.txt
 	
@@ -66,9 +66,13 @@ We will now align both files (sample and control) to the latest mouse reference 
 
 We will assess the quality control report for the sample and the control.
 
-Browse your way to the `ngs_practical` folder using your file system. Localize in the control and sample folder the fastQC folder and open the HTML file by clicking on it. The fastQC report present you on the left a summary of all the tests.
+**3.1) Browse your way to the `ngs_practical` folder using your file system. **
 
-The complete documentation for the fastQC report can be found here:
+    Localize in the control and sample folders the fastQC folder and open the HTML file by clicking on it.
+
+The fastQC report present you on the left a summary of all the tests.
+
+References: The complete documentation for the fastQC report can be found here:
 
 http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/
 
@@ -79,11 +83,11 @@ The next processing step after the alignment is to generate genome wide alignmen
 
 For this purpose we will use a wrapper script combining several steps:
 
-1. Transform bowtie output to BED files
+1. Transform bowtie output to [BED](http://genome.ucsc.edu/FAQ/FAQformat.html#format1 "UCSC Genome Bioinformatics: FAQ") files
 2. Extend the read to 200bp minimum
-3. Transform to bedgraph format then to bigWig
+3. Transform to [BedGraph](http://genome.ucsc.edu/goldenPath/help/bedgraph.html "UCSC Genome Browser: BedGraph Track Format") format then to [bigWig](http://genome.ucsc.edu/goldenPath/help/bigWig.html "UCSC Genome Browser: bigWig Track Format")
 
-**Type the following on your terminal:**
+**4.1) Type the following on your terminal:**
 
 	sam2bigWig -f sample -x mm10
 
@@ -92,11 +96,13 @@ For this purpose we will use a wrapper script combining several steps:
 
 ### 5) Calling peaks
 
-We are now ready to call the peaks. This mean determining of a binding event is real or just noise. To determe true signal from noise we use a program call MACS2. The algorithm will determined if a peak is a true positive in your sample using the control sample. You have to set a level of stringency (a p-value) to run the program. The following command generate the peaks for a stringency of 1e-9.
+We are now ready to call the peaks. This mean determining of a binding event is real or just noise. To determe true signal from noise we use a program call MACS2. The algorithm will determined if a peak is a true positive in your sample using the control sample. You have to set a level of stringency (a p-value) to run the program. 
+
+**5.1) The following command generate the peaks for a stringency of 1e-9.**
 
 	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-9 -f BED -p 1e-9 --nomodel --shiftsize=100
 	
-You can repeat the previous command to generate different peak at other stringency. For example 1e-7, 1e-5 and 1e-3
+**5.2) You can repeat the previous command to generate different peak at other stringency. For example 1e-7, 1e-5 and 1e-3**
 
 	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-7 -f BED -p 1e-7 --nomodel --shiftsize=100
 	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-5 -f BED -p 1e-5 --nomodel --shiftsize=100
