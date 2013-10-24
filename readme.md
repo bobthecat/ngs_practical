@@ -51,7 +51,7 @@ We will now align both files (sample and control) to the latest mouse reference 
 
 But before we run those script let do the quality control by ourselves.
 
-In the terminal type:
+**In the terminal type:**
 
     fastqc
 
