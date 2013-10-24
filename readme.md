@@ -23,9 +23,11 @@ Today we will use an experiment published by Ang et al., Cell 2011; where key tr
 
 **1.1) Short Intorduction to UNIX**
 
+[Wiki page](https://github.com/bobthecat/ngs_practical/wiki/UNIX-tutorial)
 
 **1.2) Navigate to the ngs_pratical folder which is on the desktop**
 
+Use what you just learned in the Unix tutorial
 
 **1.3) Now list the files in the directory:**
 
@@ -38,7 +40,7 @@ You will find **two folder (sample and control)** containing each one file call 
 You can notice that there is no header (column title). This mean that fastQ files can be combined together easily just by appending one to the other. Of course this has to make sense biologically.
 
 
-### 2) Aligning raw sequences to a reference genome
+### 2) Quality control and aligning raw sequences to a reference genome
 
 We will now align both files (sample and control) to the latest mouse reference genome release GRC83/mm10 using a in-house scripts (ngs_align and sam2bigWig). These scripts combine multiple steps:
 
@@ -46,6 +48,16 @@ We will now align both files (sample and control) to the latest mouse reference 
 2. Remove any over-represented sequences (adapters)
 3. Align to mm10 using Bowtie2
 4. Remove sequences that did not align uniquely
+
+But before we run those script let do the quality control by ourselves.
+
+In the terminal type:
+
+    fastqc
+
+The program we will use to align our sequence reads to the reference genome is [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml "Bowtie 2: fast and sensitive read alignment")
+
+The reference genome can be downloaded from [ENSEMBL](http://www.ensembl.org/index.html "Ensembl Genome Browser")
 
 **2.1) Type the following on your terminal:**
 
@@ -175,7 +187,12 @@ In this practical we will use a new fancy tool call **[Enrichr](http://amp.pharm
 **Then click on the UP arrow in the bottom corner right.**
 
 
-### 9) Questions and exercises
+### 9) Using pre-processed ChIP-seq datasets
+
+Direct your browser to the following website:
+[http://haemcode.stemcells.cam.ac.uk](http://haemcode.stemcells.cam.ac.uk "HAEMCODE")
+
+### 10) Questions and exercises
 
 ([See the wiki.](https://github.com/bobthecat/ngs_practical/wiki/NGS-practical-questions-and-exercises))
 
