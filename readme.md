@@ -21,7 +21,7 @@ Today we will use an experiment published by Ang et al., Cell 2011; where key tr
 
 ### 1)	Introduction
 
-**1.1) Short Intorduction to UNIX**    
+**1.1) Short Intorduction to UNIX**
 
 
 **1.2) Navigate to the ngs_pratical folder which is on the desktop**
