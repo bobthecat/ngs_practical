@@ -120,7 +120,10 @@ We are now ready to call the peaks. This mean determining of a binding event is 
 	# we move the results to to the result folder
 	mv results_p1e* results/
 	# we clean the peak files (.bed) from the unecessary columns for our analysis
-	parallel --gnu 'cat {} | cut -f1-3 > {.}.3bed ; mv {.}.3bed {}' ::: results/*_peaks.bed
+    cat results/results_p1e-9_peaks.bed | cut -f1-3 > temp ; mv temp results/results_p1e-9_peaks.bed
+    cat results/results_p1e-7_peaks.bed | cut -f1-3 > temp ; mv temp results/results_p1e-7_peaks.bed
+    cat results/results_p1e-5_peaks.bed | cut -f1-3 > temp ; mv temp results/results_p1e-5_peaks.bed
+    cat results/results_p1e-3_peaks.bed | cut -f1-3 > temp ; mv temp results/results_p1e-3_peaks.bed
 
 You can find the different files already computed for you in the **results** folder.
 
