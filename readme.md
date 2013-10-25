@@ -40,7 +40,7 @@ You will find **two folder (sample and control)** containing each one file call 
 You can notice that there is no header (column title). This mean that fastQ files can be combined together easily just by appending one to the other. Of course this has to make sense biologically.
 
 
-### 2) Quality control and aligning raw sequences to a reference genome
+### 2) Quality control of the raw sequences reads
 
 We will now align both files (sample and control) to the latest mouse reference genome release GRC83/mm10 using a in-house scripts (ngs_align and sam2bigWig). These scripts combine multiple steps:
 
@@ -55,36 +55,36 @@ But before we run those script let do the quality control by ourselves.
 
     fastqc
 
-The program we will use to align our sequence reads to the reference genome is [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml "Bowtie 2: fast and sensitive read alignment")
-
-The reference genome can be downloaded from [ENSEMBL](http://www.ensembl.org/index.html "Ensembl Genome Browser")
-
-**2.1) Type the following on your terminal:**
-
-	ngs_align -f sample -x mm10
-
-	ngs_align -f control -x mm10
-
-**2.2) When this is finished take a look at the alignment reports:**
-
-	cat sample/report_bowtie_sample.txt
-	
-	cat control/report_bowtie_control.txt
-
-
-### 3) Raw sequences quality check
-
-We will assess the quality control report for the sample and the control.
-
-**3.1) Browse your way to the `ngs_practical` folder using your file system. **
-
-    Localize in the control and sample folders the fastQC folder and open the HTML file by clicking on it.
-
-The fastQC report present you on the left a summary of all the tests.
+Load first the sample.fastq file into the program and run it. Save the results and load now the rubish.fastq data. Compare both results.
 
 References: The complete documentation for the fastQC report can be found here:
 
 http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/
+
+### 3) Aligning raw sequences to a reference genome
+
+The program we will use to align our sequence reads to the reference genome is [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml "Bowtie 2: fast and sensitive read alignment"). Bowtie uses indexed genome for the alignment in order to keep its memory footprint small. The reference genome can be downloaded from [ENSEMBL](http://www.ensembl.org/index.html "Ensembl Genome Browser"). The indexed genome is generated using the command: `bowtie-build [genome fasta file] [index name]`
+
+Before you run bowtie you need to know the fastq format. fastq file differ in their representation of the quality score. These could be `Sanger / Illumina 1.9`, `Sanger`, `Illumina 1.5`, `Illumina <1.3` or `Illumina 1.3`. You get this information through the fastQC report.
+
+We simplyfied the analysis by combining all the different steps into a global script `ngs_align`. You can have a look at the script by cliking on it at the top of this web page.
+
+**3.1) Type the following in your terminal:**
+
+    # The script takes two arguments
+    # -f: the folder containing the fastq file to process
+    # -x: the referecne genome to use
+    # -h: display a help menu
+    ngs_align -f sample -x mm10
+    
+    # Processing the control experiment
+	ngs_align -f control -x mm10
+
+**3.2) When this is finished take a look at the alignment reports:**
+
+	cat sample/report_bowtie_sample.txt
+	
+	cat control/report_bowtie_control.txt
 
 
 ### 4) Generating genome profiles
@@ -156,30 +156,37 @@ What we are visualizing are the profiles of both the Oct4 sample and the control
 
 ### 7)	Extracting peak associated genes using R
 
-We will now attempt to extract the genes associated to the peaks found by MACS2. For this purpose we use a R package called [ChIPpeakAnno](http://www.bioconductor.org/packages/2.12/bioc/html/ChIPpeakAnno.html "Bioconductor - ChIPpeakAnno"). 
+**7.1) Short intorduciton to R**
 
-> A peak is associated to a gene by looking at his position compared to the Transcription Start Site (TSS) of the neighbouring genes. A peak can be associated to more than one gene.
+R is a software to analyse data. This is also a statistical programming language. Here is a small primer.
+
+**Intro to R:** [wiki page](https://github.com/bobthecat/ngs_practical/wiki/R-Introduction)
+
+**7.2) Using R to extract a gene list**
+
+**In this practical we already extract the gene list from the peak lists.**
+
+To do so we use a R package called [ChIPpeakAnno](http://www.bioconductor.org/packages/2.12/bioc/html/ChIPpeakAnno.html "Bioconductor - ChIPpeakAnno"). Briefly, a peak is associated to a gene by looking at his position compared to the Transcription Start Site (TSS) of the neighbouring genes. A peak can be associated to more than one gene.
 
 The instruction how to use the R package are describe in the help of the `ChIPpeakAnno` package and the commands used to generate the gene list of today are in the `bed2gene.r` and `library.r` files in this gitHub repository. 
 
-Briefly, the bed files are loaded in R and genomic regions compared to the TSS list for the mouse genome and associated to one or more gene. The rest of the work consist in annotating the gene with NCBI Entrez gene symbols.
+We extracted the list of gene symbol as well as the list of gene ID from the comma separated file and made them available in the results folder.
 
-We extracted the list of gene symbol from the comma separated file using a little unix magic formula:
+**7.3) Cleaning the gene list**
 
-	cat results/annotatedPeakList.csv | cut -d, -f15 | perl -pe 's/"(.*)"/\1/g' | perl -pe 's/^\n//g' | tail -n +2 | sort | uniq > results/gene_list.txt
-	
-To extract the list of geneID
-
-	cat results/annotatedPeakList.csv | cut -d, -f16 | perl -pe 's/"(\d+)"/\1/g' | perl -pe 's/^\n//g' | tail -n +2 | sort | uniq > results/gene_id.txt
-	
+Open the file `gene_list.txt` inside the results folder.
 
 ### 8)	Meta-analysis of the gene list
 
 We are now at the interpretation level. The bioinformatic ground work is mostly done and, the question of what did we discover? remain.
 
-Interpreting a gene list "by hand" is a daunting task. 
+**8.1) Converting gene ID to gene symbols**
 
-**Do the following: open the gene_list.txt file in the results folder.**
+**Convert the Entrez gene IDs in the file gene_id.txt to gene symbols using [MatchMiner](http://discover.nci.nih.gov/matchminer/MatchMinerLookup.jsp "MatchMiner Lookup")**
+
+**Save the gene symbols into a new text file in your results folder**
+
+**8.2) Using annotation to interpret your gene list**
 
 One cannot know everything about all the genes. Genes have multiple annotations and information type associated to them. From pathways where they play a role to molecular function, cellular compartment or biological processes such as diseases. For all those reason we use software that will try to organize the knowledge associated with these genes.
 
