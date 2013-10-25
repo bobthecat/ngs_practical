@@ -204,6 +204,11 @@ Several tools exist that can help you understand a gene.
 One of my favorite is [HEFalMp](http://hefalmp.princeton.edu "HEFalMp: Providing Functional Maps of the Human Genome"). HEFalMp is based on gene expression analysis of all the dataset available in Gene Expression Omnibus. Typing a gene symbol return you a gene list that tells you what other gene are likely co-regulated partner of your gene.
 
 
+Another tool to discover interation partner of you gene of interest is [iHOP](http://www.ihop-net.org/UniPub/iHOP/ "iHOP - Information Hyperlinked over Proteins").
+
+**[Exercices]** Generate an interaction graph for Pou5f1 using iHOP.
+
+
 ### 9) Using pre-processed ChIP-seq datasets
 
 Direct your browser to the following website:
