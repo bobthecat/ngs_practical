@@ -197,10 +197,18 @@ In this practical we will use a new fancy tool call **[Enrichr](http://amp.pharm
 **Then click on the UP arrow in the bottom corner right.**
 
 
+**8.3) Focusing on a gene**
+
+Several tools exist that can help you understand a gene.
+
+One of my favorite is [HEFalMp](http://hefalmp.princeton.edu "HEFalMp: Providing Functional Maps of the Human Genome"). HEFalMp is based on gene expression analysis of all the dataset available in Gene Expression Omnibus. Typing a gene symbol return you a gene list that tells you what other gene are likely co-regulated partner of your gene.
+
+
 ### 9) Using pre-processed ChIP-seq datasets
 
 Direct your browser to the following website:
 [http://haemcode.stemcells.cam.ac.uk](http://haemcode.stemcells.cam.ac.uk "HAEMCODE")
+
 
 ### 10) Questions and exercises
 
