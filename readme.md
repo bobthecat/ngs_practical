@@ -55,7 +55,7 @@ But before we run those script let do the quality control by ourselves.
 
     fastqc
 
-Load first the sample.fastq file into the program and run it. Save the results and load now the rubish.fastq data. Compare both results.
+Load first the sample.fastq file into the program and run it. Save the results and load now the `SCL_ERX002138_MEL.fq` data. Compare both results.
 
 References: The complete documentation for the fastQC report can be found here:
 
