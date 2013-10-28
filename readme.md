@@ -110,6 +110,8 @@ We are now ready to call the peaks. This mean determining of a binding event is 
 
 **5.1) The following command generate the peaks for a stringency of 1e-9.**
 
+These are the command you have to run to call peaks. However, in this practical the control data are not the full dataset so the following commands will not produce correct bed files.
+
 	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-9 -f BED -p 1e-9 --nomodel --shiftsize=100
 	
 **5.2) You can repeat the previous command to generate different peak at other stringency. For example 1e-7, 1e-5 and 1e-3**
