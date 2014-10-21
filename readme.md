@@ -2,7 +2,7 @@ Next Generation Sequencing Pratical
 =====================
 
 Instructors:
-* David Ruau <djr62@cam.ac.uk>
+* David Ruau <davidruau@gmail.com>
 * Catherine Wilson <chw39@cam.ac.uk>
 * David Phillip Judge <dpj10@cam.ac.uk>
 
