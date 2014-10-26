@@ -2,7 +2,7 @@ Next Generation Sequencing Pratical
 =====================
 
 Instructors:
-* David Ruau <davidruau@gmail.com>
+* Andrew Nelson <andrew.nelson@path.ox.ac.uk>
 * Catherine Wilson <chw39@cam.ac.uk>
 * David Phillip Judge <dpj10@cam.ac.uk>
 
@@ -21,7 +21,7 @@ Today we will use an experiment published by Ang et al., Cell 2011; where key tr
 
 ### 1)	Introduction
 
-**1.1) Short Intorduction to UNIX**
+**1.1) Short Introduction to UNIX**
 
 [Wiki page](https://github.com/bobthecat/ngs_practical/wiki/UNIX-tutorial)
 
@@ -112,13 +112,13 @@ We are now ready to call the peaks. This mean determining of a binding event is 
 
 These are the command you have to run to call peaks. However, in this practical the control data are not the full dataset so the following commands will not produce correct bed files.
 
-	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-9 -f BED -p 1e-9 --nomodel --shiftsize=100
+	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-9 -f BED -p 1e-9 --nomodel --extsize=100
 	
 **5.2) You can repeat the previous command to generate different peak at other stringency. For example 1e-7, 1e-5 and 1e-3**
 
-	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-7 -f BED -p 1e-7 --nomodel --shiftsize=100
-	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-5 -f BED -p 1e-5 --nomodel --shiftsize=100
-	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-3 -f BED -p 1e-3 --nomodel --shiftsize=100
+	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-7 -f BED -p 1e-7 --nomodel --extsize=100
+	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-5 -f BED -p 1e-5 --nomodel --extsize=100
+	macs2 callpeak -t sample/sample.BED -c control/control.BED -g mm -n results_p1e-3 -f BED -p 1e-3 --nomodel --extsize=100
 	# we move the results to to the result folder
 	mv results_p1e* results/
 	# we clean the peak files (.bed) from the unecessary columns for our analysis
@@ -176,19 +176,13 @@ We extracted the list of gene symbol as well as the list of gene ID from the com
 
 **7.3) Cleaning the gene list**
 
-Open the file `gene_list.txt` inside the results folder.
+Open the file `gene_list.txt` inside the results folder.  Parentheses do not work in certain programs (including Enrichr).  Find and remove the one gene name including parentheses.
 
 ### 8)	Meta-analysis of the gene list
 
 We are now at the interpretation level. The bioinformatic ground work is mostly done and, the question of what did we discover? remain.
 
-**8.1) Converting gene ID to gene symbols**
-
-**Convert the Entrez gene IDs in the file gene_id.txt to gene symbols using [MatchMiner](http://discover.nci.nih.gov/matchminer/MatchMinerLookup.jsp "MatchMiner Lookup")**
-
-**Save the gene symbols into a new text file in your results folder**
-
-**8.2) Using annotation to interpret your gene list**
+**8.1) Using annotation to interpret your gene list**
 
 One cannot know everything about all the genes. Genes have multiple annotations and information type associated to them. From pathways where they play a role to molecular function, cellular compartment or biological processes such as diseases. For all those reason we use software that will try to organize the knowledge associated with these genes.
 
@@ -196,28 +190,20 @@ In this practical we will use a new fancy tool call **[Enrichr](http://amp.pharm
 
 **Find the file call gene_list.txt inside the *results* folder. Either copy and paste the content in the text box of the Enrichr website or submit the file.**
 
+Another tool for functional annotation analysis is DAVID (david.abcc.ncifcrf.gov).  It is old but extremely widely used.
+
 **Then click on the UP arrow in the bottom corner right.**
 
 
-**8.3) Focusing on a gene**
+**8.2) Focusing on a gene**
 
 Several tools exist that can help you understand a gene.
 
 One of my favorite is [HEFalMp](http://hefalmp.princeton.edu "HEFalMp: Providing Functional Maps of the Human Genome"). HEFalMp is based on gene expression analysis of all the dataset available in Gene Expression Omnibus. Typing a gene symbol return you a gene list that tells you what other gene are likely co-regulated partner of your gene.
 
-
 Another tool to discover interation partner of you gene of interest is [iHOP](http://www.ihop-net.org/UniPub/iHOP/ "iHOP - Information Hyperlinked over Proteins").
 
-**[Exercices]** Generate an interaction graph for Pou5f1 using iHOP.
 
-
-### 9) Using pre-processed ChIP-seq datasets
-
-Direct your browser to the following website:
-[http://haemcode.stemcells.cam.ac.uk](http://haemcode.stemcells.cam.ac.uk "HAEMCODE")
-
-
-### 10) Questions and exercises
+### 9) Questions and exercises
 
 ([See the wiki.](https://github.com/bobthecat/ngs_practical/wiki/NGS-practical-questions-and-exercises))
-
